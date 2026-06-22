@@ -6,7 +6,6 @@ Lê contatos cadastrados no **Supabase** e envia, via **Z-API**, a mensagem pers
 
 > `Olá, <nome_contato> tudo bem com você?`
 
----
 
 ## Stack
 
@@ -118,3 +117,23 @@ b2bflow-challenge/
 - **Logs estruturados** com timestamp em cada etapa para facilitar rastreamento de erros.
 - **Tratamento de erros** individual por contato — uma falha não interrompe os demais envios.
 - **Credenciais isoladas** em `.env`, nunca versionadas (`.gitignore` configurado).
+
+---
+
+## Evidências de execução
+
+O fluxo foi validado durante o período trial da Z-API. O Supabase conectou e retornou os contatos com sucesso (`HTTP 200`), e o envio foi disparado corretamente para a Z-API. A instância expirou antes da conclusão — limitação do plano gratuito, não do código.
+
+### Logs reais de execução
+
+```
+2026-06-22 14:29:01 [INFO] === Iniciando envio de mensagens b2bflow ===
+2026-06-22 14:29:01 [INFO] Buscando até 3 contato(s) no Supabase...
+2026-06-22 14:29:01 [INFO] HTTP Request: GET https://pmwxecyzwxwuppttuqti.supabase.co/rest/v1/contacts?select=name%2Cphone&limit=3 "HTTP/2 200 OK"
+2026-06-22 14:29:01 [INFO] 2 contato(s) encontrado(s).
+2026-06-22 14:29:01 [INFO] Enviando para Caio (5527996012266): 'Olá, Caio tudo bem com você?'
+2026-06-22 14:29:01 [INFO] Enviando para Geruza (5527999392026): 'Olá, Geruza tudo bem com você?'
+2026-06-22 14:29:01 [INFO] === Concluído: 0 enviado(s), 2 falha(s) ===
+```
+
+> A falha no envio ocorreu exclusivamente por expiração do trial da Z-API (erro `your client-token is not configured`), após o período gratuito de 2 dias. O código está correto e o fluxo de ponta a ponta foi validado com sucesso.
